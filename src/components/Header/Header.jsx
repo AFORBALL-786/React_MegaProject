@@ -2,7 +2,7 @@ import React from 'react'
 import Logo from '../../assets/Logo'
 import {Container, LogoutBtn} from '../index'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux/es/hooks/useSelector'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
