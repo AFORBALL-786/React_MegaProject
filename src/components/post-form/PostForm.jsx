@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form'
 import {RTE, Input, Button, Select} from '../index'
 import service from '../../appwrite/configure'
 import { useNavigate } from 'react-router-dom'
-import {  useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
+
 
 const PostForm = ({post}) => {
     const navigate = useNavigate()
-    const userData = useSelector( state => state.user.userData)
+    const userData = useSelector( state => state.auth.userData)
 
     const {register, handleSubmit, watch, setValue, control, getValues} = useForm({
         defaultValues:{
@@ -50,25 +51,26 @@ const PostForm = ({post}) => {
         }
     }
 
-    const slugTransform = useCallback( (value) => {
-        if(value && typeof value === 'string'){
-            return value.trim().toLowerCase().replace(/^[a-zA-Z\d]/g, '-')
-        }
-        return ''
-    },[])
+    const slugTransform = useCallback((value) => {
+        if (value && typeof value === "string")
+            return value
+                .trim()
+                .toLowerCase()
+                .replace(/[^a-zA-Z\d\s]+/g, "-")
+                .replace(/\s/g, "-");
 
-    useEffect(() => {
-        const subscription = watch( (value, {name}) => {
-            if (name === 'title') {
-                setValue('slug' , slugTransform(value.title,{shouldValidate:true}))
+        return "";
+    }, []);
+
+    React.useEffect(() => {
+        const subscription = watch((value, { name }) => {
+            if (name === "title") {
+                setValue("slug", slugTransform(value.title), { shouldValidate: true });
             }
-        })
+        });
 
-        return () => {
-            subscription.unsubscribe()
-        }
-
-    },[watch, slugTransform,setValue])
+        return () => subscription.unsubscribe();
+    }, [watch, slugTransform, setValue]);
 
   return (
     <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">

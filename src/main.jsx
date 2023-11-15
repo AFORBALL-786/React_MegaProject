@@ -1,18 +1,80 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import {AuthLayout} from './components/index.js'
+import {Homepage,  AllPost, AddPost, EditPost, Post} from './Pages/index.js'
+import Login from './Pages/Login.jsx'
+import Signup from './Pages/Signup.jsx'
 import App from './App.jsx'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
 import './index.css'
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+        {
+            path: "/",
+            element: <Homepage />,
+        },
+        {
+            path: "/login",
+            element: (
+                <AuthLayout authentication={false}>
+                    <Login />
+                </AuthLayout>
+            ),
+        },
+        {
+            path: "/signup",
+            element: (
+                <AuthLayout authentication={false}>
+                    <Signup />
+                </AuthLayout>
+            ),
+        },
+        {
+            path: "/all-posts",
+            element: (
+                <AuthLayout authentication>
+                    {" "}
+                    <AllPost />
+                </AuthLayout>
+            ),
+        },
+        {
+            path: "/add-post",
+            element: (
+                <AuthLayout authentication>
+                    {" "}
+                    <AddPost />
+                </AuthLayout>
+            ),
+        },
+        {
+            path: "/edit-post/:slug",
+            element: (
+                <AuthLayout authentication>
+                    {" "}
+                    <EditPost />
+                </AuthLayout>
+            ),
+        },
+        {
+            path: "/post/:slug",
+            element: <Post />,
+        },
+    ],
+},
+])
+
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+        <RouterProvider router={router}/>
     </Provider>
-  </React.StrictMode>,
+
   
 )
